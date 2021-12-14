@@ -26,3 +26,23 @@ SELECT * FROM products WHERE name LIKE '%n%'; -- Qualquer item que possua pelo m
 
 -- NOT: Inverte o comando a seguir
 SELECT * FROM products WHERE name NOT LIKE 'en%'; -- Itens que nao comecam com "en"
+
+-- ORDER BY: Ordera uma coluna (por padrao em ordem crescente)
+SELECT * FROM products ORDER BY price; -- Todos os itens mas ordenado em ordem crescente (padrao)
+
+-- ASC: Ordem crescente
+SELECT * FROM products ORDER BY price ASC; -- Mesmo resultado da query anterior
+
+-- DESC: Ordem decrescente
+SELECT * FROM products ORDER BY price DESC; -- Todos os itens mas ordenado em ordem decrescente
+
+SELECT * FROM products ORDER BY inventory DESC, price; -- Itens com a coluna inventory em ordem decrescente e tambem com a columa price em ordem crescente (padrao)
+-- Caso o valor de um item seja zero em inventory entao sera ordenado pela segunda opcao que e price
+
+-- LIMIT: Limita a quantidade de itens retornados
+SELECT * FROM products LIMIT 10; -- Retorna os 10 primeiros id's
+
+SELECT * FROM products WHERE price > 10 LIMIT 10; -- Retorna os 10 primeiros itens ordenados por id onde price e maior do que 10
+
+-- OFFSET: Pula/Ignora os primeiros resultados
+SELECT * FROM products ORDER BY id LIMIT 5 OFFSET 5; -- Retorna 5 itens ordenados por id pelando os 5 primeiros resultados, ou seja, comecando pelo id com valor 6
