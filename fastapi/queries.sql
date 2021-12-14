@@ -46,3 +46,16 @@ SELECT * FROM products WHERE price > 10 LIMIT 10; -- Retorna os 10 primeiros ite
 
 -- OFFSET: Pula/Ignora os primeiros resultados
 SELECT * FROM products ORDER BY id LIMIT 5 OFFSET 5; -- Retorna 5 itens ordenados por id pelando os 5 primeiros resultados, ou seja, comecando pelo id com valor 6
+
+-- INSERT INTO https://youtu.be/0sOvCWFmrtA?t=13183
+-- INSERTO INTO: Insere dados na tabela
+INSERT INTO products (name, price, inventory) VALUES ('tortilla', 4, 1000); -- Cria uma nova linha na tabela definindo as colunas name, price e inventory 
+-- E preciso definir em quais colunas irao ser preenchidas em uma sequencia e a sequencia de values precisa seguir essa seguencia para os valores de suas respectivas colunas
+
+INSERT INTO products (price, name, inventory) VALUES (4, 'tortilla', 1000); -- O mesmo resultado da query anterior mas alterando a ordem de price e name
+
+-- returning *: Retorna todas as colunas criadas 
+INSERT INTO products (name, price, inventory) VALUES ('Car', 10000, 1000) returning *; -- Insere um item na tabela e depois o retorna
+-- Se for retornar apenas uma coluna substitua "*" pela coluna
+
+INSERT INTO products (name, price, inventory) VALUES ('Blue Car', 10000, 1000), ('Red Card', 20000, 500), ('Black Car', 500, 100) returning *; -- Adicionando tres linhas simultaneamente na tabela products
