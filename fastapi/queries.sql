@@ -54,8 +54,16 @@ INSERT INTO products (name, price, inventory) VALUES ('tortilla', 4, 1000); -- C
 
 INSERT INTO products (price, name, inventory) VALUES (4, 'tortilla', 1000); -- O mesmo resultado da query anterior mas alterando a ordem de price e name
 
--- returning *: Retorna todas as colunas criadas 
+-- returning *: Retorna todas as colunas apos uma acao (CREATE, DELETE, UPDATE) 
 INSERT INTO products (name, price, inventory) VALUES ('Car', 10000, 1000) returning *; -- Insere um item na tabela e depois o retorna
 -- Se for retornar apenas uma coluna substitua "*" pela coluna
 
 INSERT INTO products (name, price, inventory) VALUES ('Blue Car', 10000, 1000), ('Red Card', 20000, 500), ('Black Car', 500, 100) returning *; -- Adicionando tres linhas simultaneamente na tabela products
+
+-- DELETE https://youtu.be/0sOvCWFmrtA?t=13632
+-- DELETE: Deleta algo na tabela (nao se pode esquece de usar WHERE se nao ira deletar todos os dados)
+DELETE FROM products WHERE id = 10; -- Deleta o item que possui o id 10
+
+DELETE FROM products WHERE id = 11 RETURNING *; -- Deleta o item que possui o id 10 e retornando todas as colunas dessa linha
+
+DELETE FROM products WHERE inventory = 0; -- Deleta os itens onde inventory e igual a 0
