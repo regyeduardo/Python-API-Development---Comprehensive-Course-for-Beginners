@@ -67,3 +67,10 @@ DELETE FROM products WHERE id = 10; -- Deleta o item que possui o id 10
 DELETE FROM products WHERE id = 11 RETURNING *; -- Deleta o item que possui o id 10 e retornando todas as colunas dessa linha
 
 DELETE FROM products WHERE inventory = 0; -- Deleta os itens onde inventory e igual a 0
+
+-- UPDATE https://youtu.be/0sOvCWFmrtA?t=13819
+-- UPDATE: Atualiza/Modifica dados
+-- SET: Sempre que se usa UPDATE e preciso usar esse comando
+UPDATE products SET name = 'Fluor Tortilla', price = 40 WHERE id = 5; -- Modifica as colunas name e price onde a coluna id e igual a 5
+
+UPDATE products SET is_sale = true WHERE id = 14 RETURNING *; -- Modifica a coluna is_sale onde o id e igual a 14 retornando a linha modificada
