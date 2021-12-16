@@ -17,6 +17,11 @@
 @app.delete("/posts/{id}")
 ```
 
+### RUN
+```bash
+uvicorn app.main:app --reload
+```
+
 ## Databases
 ### What is a database
 - Database is a collection of organized data that can be easaly accessed and managed
