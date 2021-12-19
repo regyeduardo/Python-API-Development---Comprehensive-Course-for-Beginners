@@ -71,7 +71,6 @@ def create_post(post: Post):
     cursor.execute(query)
     new_post = cursor.fetchone()
     conn.commit()
-    cursor.close()
     return {"data": new_post}
 
 
