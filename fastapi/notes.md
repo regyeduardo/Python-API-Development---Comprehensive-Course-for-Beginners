@@ -76,3 +76,27 @@ uvicorn app.main:app --reload
 
 ### Setting up postgres portable
 [Setting up postgres portable](https://stackoverflow.com/questions/26441873/starting-postgresql-and-pgadmin-in-windows-without-installation)
+
+## Object Relational Mapper(ORM) 4:31:24
+- Layer of obstraction that sits between the database and us
+- We can perform all database operations through traditional python code. No more SQL!
+
+### What can ORMs Do
+- Instead of manually defining tables in postgres, we can define our tables as python models
+- Queries can be made exclusively through python code. No SQL is necessary
+```python
+class Post(Base):
+    __tablename__ = "posts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True, nullable=False)
+    content = Column(String, nullable=False)
+    published = Column(Boolean)
+```
+```python
+db.query(models.Post).filter(models.Post.id == id).first()
+```
+
+### SQLALCHEMY
+- SQLALCHEMY is one of the most popular python ORMs
+- It is stand-alone library and has no association with FastAPI, It can be used with any other python web frameworks or any python based application 

@@ -5,11 +5,24 @@ from typing import Optional
 import psycopg2
 from pydantic import BaseModel  # pylint: disable=no-name-in-module
 from psycopg2.extras import RealDictCursor
-from fastapi import FastAPI, Response, status, HTTPException
+from sqlalchemy.orm import Session
+from fastapi import FastAPI, Response, status, HTTPException, Depends
+from . import models
+from .database import engine, SessionLocal
 
 # from fastapi.params import Body
 
+models.Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
+
+# Dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 class Post(BaseModel):  # pylint: disable=missing-class-docstring
@@ -56,6 +69,11 @@ def find_index_post(id):
 @app.get("/")
 def root():
     return {"message": "Welcome to my api"}
+
+
+@app.get("/sqlalchemy")
+def test_post(db: Session = Depends(get_db)):
+    return {"status": "success"}
 
 
 @app.get("/posts")
