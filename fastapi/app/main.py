@@ -1,17 +1,17 @@
+import time  # pylint: disable=missing-module-docstring
+from random import randrange
 from typing import Optional
+import psycopg2
+from pydantic import BaseModel  # pylint: disable=no-name-in-module
+from psycopg2.extras import RealDictCursor
 from fastapi import FastAPI, Response, status, HTTPException
 
 # from fastapi.params import Body
-from pydantic import BaseModel
-from random import randrange
-import psycopg2
-from psycopg2.extras import RealDictCursor
-import time
 
 app = FastAPI()
 
 
-class Post(BaseModel):
+class Post(BaseModel):  # pylint: disable=missing-class-docstring
     title: str
     content: str
     published: bool = True
@@ -28,7 +28,6 @@ while True:
             cursor_factory=RealDictCursor,
         )
         cursor = conn.cursor()
-        print("Database connection was successful")
     except Exception as error:
         print("Connection database failed", error)
         time.sleep(2)
@@ -59,9 +58,9 @@ def root():
 @app.get("/posts")
 def get_posts():
     posts = cursor.execute(
-        '''
+        """
         SELECT * FROM posts;
-        '''
+        """
     )
     print(posts)
     return {"data": my_posts}

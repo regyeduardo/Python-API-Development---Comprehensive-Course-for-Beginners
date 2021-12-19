@@ -73,3 +73,6 @@ uvicorn app.main:app --reload
 ### Null Constraints
 - By default, when adding a new entry to a database, any column can be left blank. When a column is left blank, it has a null value
 - If you need column to be properly filled in to create a new record, a NOT NULL constraint can be added to yhe column to ensure that the column is never left blank
+
+### Setting up postgres portable
+[Setting up postgres portable](https://stackoverflow.com/questions/26441873/starting-postgresql-and-pgadmin-in-windows-without-installation)
