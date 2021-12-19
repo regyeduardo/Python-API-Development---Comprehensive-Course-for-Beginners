@@ -1,5 +1,6 @@
 import time  # pylint: disable=missing-module-docstring
-from random import randrange
+
+# from random import randrange
 from typing import Optional
 import psycopg2
 from pydantic import BaseModel  # pylint: disable=no-name-in-module
@@ -66,10 +67,12 @@ def get_posts():
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
-    post_dict = post.dict()
-    post_dict["id"] = randrange(0, 1000000)
-    my_posts.append(post_dict)
-    return {"data": post_dict}
+    query = f""" INSERT INTO posts (title, content, published) VALUES ('{post.title}', '{post.content}', '{post.published}') RETURNING *; """
+    cursor.execute(query)
+    new_post = cursor.fetchone()
+    conn.commit()
+    cursor.close()
+    return {"data": new_post}
 
 
 @app.get("/posts/latest")
