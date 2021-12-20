@@ -1,7 +1,7 @@
 import time  # pylint: disable=missing-module-docstring
 
 # from random import randrange
-from typing import Optional
+# from typing import Optional
 import psycopg2
 from pydantic import BaseModel  # pylint: disable=no-name-in-module
 from psycopg2.extras import RealDictCursor
@@ -21,7 +21,6 @@ class Post(BaseModel):  # pylint: disable=missing-class-docstring
     title: str
     content: str
     published: bool = True
-    rating: Optional[int] = None
 
 
 while True:
@@ -40,22 +39,16 @@ while True:
         print("Connection database failed", error)
         time.sleep(2)
 
-my_posts = [
-    {"title": "title of post 1", "content": "content of post 1", "id": 1},
-    {"title": "favorite food", "content": "I like pizza", "id": 2},
-]
+# def find_post(id):
+#     for post in my_posts:
+#         if post["id"] == id:
+#             return post
 
 
-def find_post(id):
-    for post in my_posts:
-        if post["id"] == id:
-            return post
-
-
-def find_index_post(id):
-    for index, post in enumerate(my_posts):
-        if post["id"] == id:
-            return index
+# def find_index_post(id):
+#     for index, post in enumerate(my_posts):
+#         if post["id"] == id:
+#             return index
 
 
 @app.get("/")
@@ -78,17 +71,17 @@ def get_posts(db: Session = Depends(get_db)):
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post, db: Session = Depends(get_db)):
-    new_post = models.Post(title=post.title, content=post.content, published=post.published) # Not added to the db yet
+    new_post = models.Post(**post.dict()) # Not added to the db yet
     db.add(new_post)
     db.commit() # Saving post in db
     db.refresh(new_post) # It's the same of 'RETURNING *'
     return {"data": new_post}
 
 
-@app.get("/posts/latest")
-def get_lastest_post():
-    post = my_posts[-1]
-    return {"detail": post}
+# @app.get("/posts/latest")
+# def get_lastest_post():
+#     post = my_posts[-1]
+#     return {"detail": post}
 
 
 @app.get("/posts/{id}")
