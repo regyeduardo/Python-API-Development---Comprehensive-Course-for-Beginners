@@ -8,21 +8,13 @@ from psycopg2.extras import RealDictCursor
 from sqlalchemy.orm import Session
 from fastapi import FastAPI, Response, status, HTTPException, Depends
 from . import models
-from .database import engine, SessionLocal
+from .database import engine, get_db
 
 # from fastapi.params import Body
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 class Post(BaseModel):  # pylint: disable=missing-class-docstring
