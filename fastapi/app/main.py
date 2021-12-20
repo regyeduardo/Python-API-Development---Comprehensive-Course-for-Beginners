@@ -77,11 +77,11 @@ def get_posts(db: Session = Depends(get_db)):
 
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
-def create_post(post: Post):
-    query = f""" INSERT INTO posts (title, content, published) VALUES ('{post.title}', '{post.content}', '{post.published}') RETURNING *; """
-    cursor.execute(query)
-    new_post = cursor.fetchone()
-    conn.commit()
+def create_post(post: Post, db: Session = Depends(get_db)):
+    new_post = models.Post(title=post.title, content=post.content, published=post.published) # Not added to the db yet
+    db.add(new_post)
+    db.commit() # Saving post in db
+    db.refresh(new_post) # It's the same of 'RETURNING *'
     return {"data": new_post}
 
 
