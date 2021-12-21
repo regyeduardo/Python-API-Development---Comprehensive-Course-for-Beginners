@@ -1,7 +1,7 @@
 import time  # pylint: disable=missing-module-docstring
 
 # from random import randrange
-# from typing import Optional
+from typing import Optional, List
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from sqlalchemy.orm import Session
@@ -38,22 +38,22 @@ def root():
 
 
 @app.get("/posts")
-def get_posts(db: Session = Depends(get_db)):
+def get_posts(db: Session = Depends(get_db), response_model=List[schemas.Post]):
     posts = db.query(models.Post).all()
-    return {"data": posts}
+    return posts
 
 
-@app.post("/posts", status_code=status.HTTP_201_CREATED)
+@app.post("/posts", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
 def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
     new_post = models.Post(**post.dict()) # Not added to the db yet
     db.add(new_post)
     db.commit() # Saving post in db
     db.refresh(new_post) # It's the same of 'RETURNING *'
-    return {"data": new_post}
+    return new_post
 
 
 @app.get("/posts/{id}")
-def get_post(id: int, db: Session = Depends(get_db)):
+def get_post(id: int, db: Session = Depends(get_db), response_model=schemas.Post):
     post = db.query(models.Post).filter(models.Post.id == id).first() # filter = where
     if not post:
         raise HTTPException(
@@ -79,7 +79,7 @@ def delete_post(id: int, db: Session = Depends(get_db)):
  
 
 @app.put("/posts/{id}")
-def update_post(id: int, updated_post: schemas.PostUpdate, db: Session = Depends(get_db)):
+def update_post(id: int, updated_post: schemas.PostUpdate, db: Session = Depends(get_db), response_model=schemas.Post):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     post = post_query.first()
 
