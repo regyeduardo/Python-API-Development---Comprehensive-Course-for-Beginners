@@ -99,4 +99,12 @@ db.query(models.Post).filter(models.Post.id == id).first()
 
 ### SQLALCHEMY
 - SQLALCHEMY is one of the most popular python ORMs
-- It is stand-alone library and has no association with FastAPI, It can be used with any other python web frameworks or any python based application 
+- It is stand-alone library and has no association with FastAPI, It can be used with any other python web frameworks or any python based application
+
+## Schema Models 5:29:56
+- Schema/Pydantic Models define the structure of a request & response
+- This ensure that when a user wants to create a post, the request will only go through if it has a "title" and "content" in the body
+
+### SQLALCHEMY Models
+- Responsible for defining the columns of our "posts" table within postgres
+- Is used to query, create, delete and update entries within the database 
