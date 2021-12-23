@@ -1,4 +1,4 @@
-from pydantic import BaseModel  # pylint: disable=no-name-in-module
+from pydantic import BaseModel, EmailStr  # pylint: disable=no-name-in-module
 from datetime import datetime
 
 class PostBase(BaseModel):  # pylint: disable=missing-class-docstring
@@ -18,3 +18,7 @@ class Post(PostBase):
 
     class Config:
         orm_mode = True
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str
