@@ -1,16 +1,10 @@
-import time  # pylint: disable=missing-module-docstring
-
-# from random import randrange
-from typing import Optional, List
+import time
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from sqlalchemy.orm import Session
-from fastapi import FastAPI, Response, status, HTTPException, Depends
-from . import models, schemas, utils
-from .database import engine, get_db
-from .routers import post, user
-
-# from fastapi.params import Body
+from fastapi import FastAPI
+from . import models
+from .database import engine
+from .routers import post, user, auth
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -28,13 +22,14 @@ while True:
         cursor = conn.cursor()
         print("Database connection was successful")
         break
-    except Exception as error:
+    except Exception as error:  # pylint: disable=broad-except
         print("Connection database failed", error)
         time.sleep(2)
 
 
 app.include_router(post.router)
 app.include_router(user.router)
+app.include_router(auth.router)
 
 
 @app.get("/")
