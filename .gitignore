@@ -1,1 +1,8 @@
-fastapi/.pylintrc
+/venv
+/.venv
+/.vscode
+__pycache__/
+
+# FILES
+main.py*
+.env/
