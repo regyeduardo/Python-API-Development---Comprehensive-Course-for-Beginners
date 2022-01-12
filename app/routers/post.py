@@ -15,8 +15,9 @@ def create_posts(
         db: Session = Depends(get_db),
         current_user: int = Depends(oauth2.get_current_user)):
 
+    print(current_user.id)
     print(current_user.email)
-    new_post = models.Post(**post.dict())  # Not added to the db yet
+    new_post = models.Post(owner_id=current_user.id, **post.dict())  # Not added to the db yet
     db.add(new_post)
     db.commit()  # Saving post in db
     db.refresh(new_post)  # It's the same of 'RETURNING *'
@@ -27,7 +28,7 @@ def create_posts(
 def get_posts(
         db: Session = Depends(get_db),
         current_user: int = Depends(oauth2.get_current_user)):
-    posts = db.query(models.Post).all()
+    posts = db.query(models.Post).filter(models.Post.owner_id == current_user.id).all()
     return posts
 
 
@@ -50,15 +51,20 @@ def get_post(
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_post(id: int, db: Session = Depends(get_db),
                 current_user: int = Depends(oauth2.get_current_user)):
-    post = db.query(models.Post).filter(models.Post.id == id)
+    post_query = db.query(models.Post).filter(models.Post.id == id)
 
-    if post.first() is None:
+    post = post_query.first()
+
+    if post is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Post with id: {id} does not exist",
         )
 
-    post.delete(synchronize_session=False)
+    if post.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to perform requested action")
+
+    post_query.delete(synchronize_session=False)
     db.commit()
     return {"status": Response(status_code=status.HTTP_204_NO_CONTENT)}
 
@@ -74,6 +80,9 @@ def update_post(id: int,
     if post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Post with id: {id} does not exist")
+
+    if post.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to perform requested action")
 
     post_query.update(updated_post.dict(), synchronize_session=False)
     db.commit()

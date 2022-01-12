@@ -10,8 +10,8 @@ class PostBase(BaseModel):
 
 
 class PostCreate(PostBase):
+    # owner_id: int
     pass
-
 
 class PostUpdate(PostBase):
     pass
@@ -20,6 +20,7 @@ class PostUpdate(PostBase):
 class Post(PostBase):
     id: int
     created_at: datetime
+    owner_id: int
 
     class Config:
         orm_mode = True
