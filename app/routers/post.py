@@ -13,8 +13,9 @@ router = APIRouter(prefix='/posts', tags=['Posts'])
 def create_posts(
         post: schemas.PostCreate,
         db: Session = Depends(get_db),
-        user_id: int = Depends(oauth2.get_current_user)):
+        current_user: int = Depends(oauth2.get_current_user)):
 
+    print(current_user.email)
     new_post = models.Post(**post.dict())  # Not added to the db yet
     db.add(new_post)
     db.commit()  # Saving post in db
@@ -25,7 +26,7 @@ def create_posts(
 @router.get("/", response_model=List[schemas.Post])
 def get_posts(
         db: Session = Depends(get_db),
-        user_id: int = Depends(oauth2.get_current_user)):
+        current_user: int = Depends(oauth2.get_current_user)):
     posts = db.query(models.Post).all()
     return posts
 
@@ -34,7 +35,7 @@ def get_posts(
 def get_post(
         id: int,
         db: Session = Depends(get_db),
-        user_id: int = Depends(oauth2.get_current_user)):
+        current_user: int = Depends(oauth2.get_current_user)):
     post = db.query(
         models.Post).filter(models.Post.id == id).first()  # filter = where
 
@@ -48,7 +49,7 @@ def get_post(
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_post(id: int, db: Session = Depends(get_db),
-                user_id: int = Depends(oauth2.get_current_user)):
+                current_user: int = Depends(oauth2.get_current_user)):
     post = db.query(models.Post).filter(models.Post.id == id)
 
     if post.first() is None:
@@ -66,7 +67,7 @@ def delete_post(id: int, db: Session = Depends(get_db),
 def update_post(id: int,
                 updated_post: schemas.PostUpdate,
                 db: Session = Depends(get_db),
-                user_id: int = Depends(oauth2.get_current_user)):
+                current_user: int = Depends(oauth2.get_current_user)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     post = post_query.first()
 
